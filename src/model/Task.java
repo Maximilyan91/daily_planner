@@ -3,7 +3,12 @@ package model;
 import exception.IncorrectArgumentException;
 import validate.Validation;
 
+import javax.swing.text.DateFormatter;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Formatter;
 import java.util.Objects;
 
 public abstract class Task {
@@ -60,6 +65,17 @@ public abstract class Task {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", dateTime=" + dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")) +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", type=" + type.getName() +
+                '}';
     }
 
     @Override
