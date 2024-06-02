@@ -1,6 +1,6 @@
 package exception;
 
-public class IncorrectArgumentException {
+public class IncorrectArgumentException extends RuntimeException {
 
     private final String argument;
 

@@ -1,25 +1,24 @@
 package model;
 
+import exception.IncorrectArgumentException;
+import validate.Validation;
+
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public abstract class Task {
 
-    private final int id;
-
-    private String name;
-
-    private String description;
-
-    private Type type;
-
-    private final LocalDateTime dateTime;
-
     private static int idGenerator = 0;
+    private final int id;
+    private final LocalDateTime dateTime;
+    private String name;
+    private String description;
+    private Type type;
 
     public Task(String name, String description, Type type) {
         this.id = idGenerator;
-        this.name = name;
-        this.description = description;
+        setName(name);
+        setDescription(description);
         this.type = type;
         this.dateTime = LocalDateTime.now();
         idGenerator++;
@@ -33,45 +32,45 @@ public abstract class Task {
         return name;
     }
 
+    public void setName(String name) {
+        if (!Validation.validateString(name)) {
+            throw new IncorrectArgumentException(name);
+        }
+        this.name = name;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        if (!Validation.validateString(description)) {
+            throw new IncorrectArgumentException(description);
+        }
+        this.description = description;
     }
 
     public Type getType() {
         return type;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void setType(Type type) {
         this.type = type;
     }
 
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task task)) return false;
-
-        return id == task.id && name.equals(task.name) && description.equals(task.description) && type == task.type && dateTime.equals(task.dateTime);
+        return getId() == task.getId() && Objects.equals(getName(), task.getName()) && Objects.equals(getDescription(), task.getDescription()) && getType() == task.getType() && Objects.equals(getDateTime(), task.getDateTime());
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + name.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + type.hashCode();
-        result = 31 * result + dateTime.hashCode();
-        return result;
+        return Objects.hash(getId(), getName(), getDescription(), getType(), getDateTime());
     }
 }
