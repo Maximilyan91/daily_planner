@@ -11,6 +11,7 @@ public class WeeklyTask extends Task {
         super(name, description, type);
     }
 
+    @Override
     public LocalDateTime nextDateTask() {
         return getDateTime().plusWeeks(1);
     }

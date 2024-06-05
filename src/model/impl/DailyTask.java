@@ -11,6 +11,7 @@ public class DailyTask extends Task {
         super(name, description, type);
     }
 
+    @Override
     public LocalDateTime nextDateTask() {
         return getDateTime().plusDays(1);
     }

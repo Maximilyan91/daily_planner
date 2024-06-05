@@ -3,12 +3,8 @@ package model;
 import exception.IncorrectArgumentException;
 import validate.Validation;
 
-import javax.swing.text.DateFormatter;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Formatter;
 import java.util.Objects;
 
 public abstract class Task {
@@ -28,6 +24,8 @@ public abstract class Task {
         this.dateTime = LocalDateTime.now();
         idGenerator++;
     }
+
+    public abstract LocalDateTime nextDateTask();
 
     public int getId() {
         return id;

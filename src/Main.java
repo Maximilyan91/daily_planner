@@ -1,6 +1,9 @@
 import model.Task;
 import model.Type;
 import model.impl.*;
+import service.TaskService;
+
+import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,10 +16,18 @@ public class Main {
 
         //   Task invalidTask1 = new YearlyTask("", "Какое-то описание", Type.PERSONAL);
         //   Task invalidTask2 = new YearlyTask("Ежегодная задача №5", "", Type.PERSONAL);
+        TaskService service = new TaskService();
 
-        Task[] tasks = {testingTask1, testingTask2, testingTask3, testingTask4, testingTask5};
-        for (Task task : tasks) {
-            System.out.println(task);
-        }
+        service.addTask(testingTask1);
+        service.addTask(testingTask2);
+        service.addTask(testingTask3);
+        service.addTask(testingTask4);
+        service.addTask(testingTask5);
+        LocalDate date =LocalDate.of(2024, 8, 5);
+
+//        for (Task task : service.getAllTasks().values()) {
+//            System.out.println(task);
+//        }
+        System.out.println(service.getAllByDate(date));
     }
 }
