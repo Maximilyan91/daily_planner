@@ -12,6 +12,9 @@ public class TaskService {
     private static final Map<Integer, Task> allTasks = new HashMap<>();
     private static final List<Task> removedTasks = new ArrayList<>();
 
+    public TaskService() {
+    }
+
     public void addTask(Task task) {
         if (task == null) {
             throw new TaskNotFoundException("Добавляемая задача равна null");
@@ -60,5 +63,9 @@ public class TaskService {
                         .toLocalDate()
                         .equals(date))
               .collect(Collectors.toList());
+    }
+
+    public Task getLastTask() {
+        return allTasks.get(allTasks.size());
     }
 }
