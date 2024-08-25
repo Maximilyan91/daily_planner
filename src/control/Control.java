@@ -14,10 +14,12 @@ public class Control {
     private static final TaskService service = new TaskService();
 
     public static void controlPanel() {
-        printMenu();
-        int choice = Integer.parseInt(readConsole());
 
+
+        printHeader();
         while (true) {
+            printMainMenu();
+            int choice = Integer.parseInt(readConsole());
             switch (choice) {
                 case 1:
                     System.out.println("Задача создана: \n" + createTask());
@@ -29,10 +31,11 @@ public class Control {
                     System.out.println("Удалить задачу по id");
                     break;
             }
+
         }
     }
 
-    private static void printMenu() {
+    private static void printHeader() {
         System.out.println("""
                 Добро пожаловать в консольный ежедневник\
 
@@ -40,6 +43,11 @@ public class Control {
 
                 не дай бог им пользоваться в реальности =)\
 
+                """);
+    }
+
+    private static void printMainMenu() {
+        System.out.println("""
                 Введите цифру необходимого пункта меню:\
 
                 1. Добавить задачу.\
@@ -66,15 +74,10 @@ public class Control {
         String description = readConsole();
 
         System.out.println("Укажите тип задачи: 1 - личная, 2 - рабочая");
-        int typeTask = Integer.parseInt(readConsole());
-        Type type = Type.PERSONAL;
 
-        if (typeTask == 2) {
-            type = Type.WORK;
-        }
-        if (typeTask != 1) {
-            System.out.println("Укажите только цифру 1 или 2");
-        }
+        Type type = setTypeTask();
+
+        // TODO: вывести повторяемость в отдельный метод, проработать все ситуации с неправильным вводом
 
         System.out.println("""
                 И последнее:\
@@ -113,5 +116,30 @@ public class Control {
             }
         }
         return service.getLastTask().toString();
+    }
+
+    private static Type setTypeTask() {
+        int typeTask = Integer.parseInt(readConsole());
+
+        boolean inCorrectInput;
+        Type type = null;
+        do {
+            switch (typeTask) {
+                case 1 -> {
+                    type = Type.PERSONAL;
+                    inCorrectInput = false;
+                }
+                case 2 -> {
+                    type = Type.WORK;
+                    inCorrectInput = false;
+                }
+                default -> {
+                    System.out.println("Укажите только цифру 1 или 2");
+                    inCorrectInput = true;
+                    typeTask = Integer.parseInt(readConsole());
+                }
+            }
+        } while (inCorrectInput);
+        return type;
     }
 }
