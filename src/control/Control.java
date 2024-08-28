@@ -12,16 +12,21 @@ public class Control {
 
     private static final TaskService service = new TaskService();
 
-    public static void controlPanel() {
-        boolean appIsLauch = true;
-        while (appIsLauch) {
+    public static void appMainMenu() {
+        boolean appIsLaunch = true;
+        while (appIsLaunch) {
             printMainMenu();
             int choice = readIntConsole();
             switch (choice) {
-                case 1 -> System.out.println("Задача создана: \n" + createTask());
+                case 1 -> {
+                    Task task = createTask();
+                    if (task != null) {
+                        System.out.println("Задача создана " + task);
+                    }
+                }
                 case 2 -> System.out.println("Получить задачи на день");
                 case 3 -> System.out.println("Удалить задачу по id");
-                case 0 -> appIsLauch = false;
+                case 0 -> appIsLaunch = false;
             }
         }
     }
@@ -46,7 +51,7 @@ public class Control {
                 2. Получить задачи на день.\
 
                 3. Удалить задачу.\
-                
+                                
                 0. Выход из программы. \
                 """);
     }
@@ -65,7 +70,7 @@ public class Control {
         }
     }
 
-    private static String createTask() {
+    private static Task createTask() {
         System.out.println("Введите название задачи");
         String name = readStringConsole();
 
@@ -73,74 +78,72 @@ public class Control {
         String description = readStringConsole();
 
         System.out.println("Укажите тип задачи: 1 - личная, 2 - рабочая");
-
         Type type = setTypeTask();
 
         System.out.println("""
                 И последнее:\
-                
+
                 1 - однократная задача.\
-                
+                                
                 2 - ежедневная задача.\
-                
+                                
                 3 - еженедельная задача.\
-                
+                                
                 4 - ежемесячная задача.\
-                
+                                
                 5 - ежегодная задача.\
                 """);
-        try {
-            switch (readIntConsole()) {
-                case 1 -> {
-                    Task task = new OneTimeTask(name, description, type);
-                    return task.toString();
-                }
-                case 2 -> {
-                    Task task = new DailyTask(name, description, type);
-                    return task.toString();
-                }
-                case 3 -> {
-                    Task task = new WeeklyTask(name, description, type);
-                    return task.toString();
-                }
-                case 4 -> {
-                    Task task = new MonthlyTask(name, description, type);
-                    return task.toString();
-                }
-                case 5 -> {
-                    Task task = new YearlyTask(name, description, type);
-                    return task.toString();
-                }
-            }
-        } catch (IncorrectArgumentException e) {
-            System.out.println("Задача не создана. Введен неправильный аргумент имени или описания задачи.");
-            controlPanel();
-        }
-        return service.getLastTask().toString();
+        return taskInitialize(name, description, type);
     }
 
     private static Type setTypeTask() {
         int typeTask = readIntConsole();
 
-        boolean inCorrectInput;
+        boolean isInCorrectInput;
         Type type = null;
         do {
             switch (typeTask) {
                 case 1 -> {
                     type = Type.PERSONAL;
-                    inCorrectInput = false;
+                    isInCorrectInput = false;
                 }
                 case 2 -> {
                     type = Type.WORK;
-                    inCorrectInput = false;
+                    isInCorrectInput = false;
                 }
                 default -> {
                     System.out.println("Укажите только цифру 1 или 2");
-                    inCorrectInput = true;
+                    isInCorrectInput = true;
                     typeTask = readIntConsole();
                 }
             }
-        } while (inCorrectInput);
+        } while (isInCorrectInput);
         return type;
     }
+
+    private static Task taskInitialize(String name, String description, Type type) {
+        int choice = -1;
+        Task task = null;
+        while (choice > 5 || choice < 0) {
+            choice = readIntConsole();
+            try {
+                switch (choice) {
+                    case 1 -> task = new OneTimeTask(name, description, type);
+                    case 2 -> task = new DailyTask(name, description, type);
+                    case 3 -> task = new WeeklyTask(name, description, type);
+                    case 4 -> task = new MonthlyTask(name, description, type);
+                    case 5 -> task = new YearlyTask(name, description, type);
+                    default -> System.out.println("Введите число от 1 до 5");
+                }
+            } catch (IncorrectArgumentException e) {
+                System.out.println("==== Задача не создана!!! === \n Введён неправильный аргумент - " + e + " имени или описания задачи.\n");
+                break;
+            }
+        }
+        if (task != null) {
+            service.addTask(task);
+        }
+        return task;
+    }
 }
+

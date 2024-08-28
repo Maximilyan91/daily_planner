@@ -25,6 +25,6 @@ public class Main {
 //        }
 //        System.out.println(service.getAllByDate(date));
         Control.printHeader();
-        Control.controlPanel();
+        Control.appMainMenu();
     }
 }
