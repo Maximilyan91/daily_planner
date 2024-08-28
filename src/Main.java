@@ -1,10 +1,4 @@
 import control.Control;
-import model.Task;
-import model.Type;
-import model.impl.*;
-import service.TaskService;
-
-import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
@@ -30,7 +24,7 @@ public class Main {
 //            System.out.println(task);
 //        }
 //        System.out.println(service.getAllByDate(date));
-
+        Control.printHeader();
         Control.controlPanel();
     }
 }
